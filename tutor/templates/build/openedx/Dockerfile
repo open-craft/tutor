@@ -66,6 +66,11 @@ ENV VIRTUAL_ENV /openedx/venv/
 
 RUN apt update && apt install -y software-properties-common libmysqlclient-dev libxmlsec1-dev libgeos-dev
 
+# confluent-kafka (python package in base.in) requires librdkafka-dev v1.6.0 or later.
+RUN wget -qO - https://packages.confluent.io/deb/7.0/archive.key | apt-key add -
+RUN add-apt-repository "deb https://packages.confluent.io/clients/deb $(lsb_release -cs) main"
+RUN apt-get update && apt install -y librdkafka-dev
+
 # Note that this means that we need to reinstall all requirements whenever there is a
 # change in edx-platform, which sucks. But there is no obvious alternative, as we need
 # to install some packages from edx-platform.
