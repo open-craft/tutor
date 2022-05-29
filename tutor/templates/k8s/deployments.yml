@@ -95,8 +95,13 @@ spec:
             - mountPath: /openedx/config
               name: config
           resources:
+            {%- if CMS_AUTOSCALING %}
+            limits:
+              cpu: {{ CMS_CPU_LIMIT }}
+              memory: {{ CMS_MEMORY_LIMIT }}
+            {%- endif %}
             requests:
-              memory: 2Gi
+              memory: {{ CMS_MEMORY_REQUEST }}
           securityContext:
             allowPrivilegeEscalation: false
       volumes:
@@ -144,6 +149,12 @@ spec:
               name: settings-cms
             - mountPath: /openedx/config
               name: config
+          resources:
+            {%- if CMS_WORKER_AUTOSCALING %}
+            limits:
+              cpu: {{ CMS_WORKER_CPU_LIMIT }}
+              memory: {{ CMS_WORKER_MEMORY_LIMIT }}
+            {%- endif %}
           securityContext:
             allowPrivilegeEscalation: false
       volumes:
@@ -195,8 +206,13 @@ spec:
             - mountPath: /openedx/config
               name: config
           resources:
+            {%- if LMS_AUTOSCALING %}
+            limits:
+              cpu: {{ LMS_CPU_LIMIT }}
+              memory: {{ LMS_MEMORY_LIMIT }}
+            {%- endif %}
             requests:
-              memory: 2Gi
+              memory: {{ LMS_MEMORY_REQUEST }}
           securityContext:
             allowPrivilegeEscalation: false
       volumes:
@@ -244,6 +260,12 @@ spec:
               name: settings-cms
             - mountPath: /openedx/config
               name: config
+          resources:
+            {%- if LMS_WORKER_AUTOSCALING %}
+            limits:
+              cpu: {{ LMS_WORKER_CPU_LIMIT }}
+              memory: {{ LMS_WORKER_MEMORY_LIMIT }}
+            {%- endif %}
           securityContext:
             allowPrivilegeEscalation: false
       volumes:

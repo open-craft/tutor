@@ -1,0 +1,115 @@
+{%- if RUN_LMS and LMS_AUTOSCALING %}
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: lms-hpa
+  labels:
+    app.kubernetes.io/name: lms-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: lms
+  minReplicas: {{ LMS_MIN_REPLICAS }}
+  maxReplicas: {{ LMS_MAX_REPLICAS }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ LMS_AVG_CPU }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: {{ LMS_AVG_MEMORY }}
+{%- endif %}
+{%- if RUN_LMS and LMS_WORKER_AUTOSCALING %}
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: lms-worker-hpa
+  labels:
+    app.kubernetes.io/name: lms-worker-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: lms-worker
+  minReplicas: {{ LMS_WORKER_MIN_REPLICAS }}
+  maxReplicas: {{ LMS_WORKER_MAX_REPLICAS }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ LMS_WORKER_AVG_CPU }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: {{ LMS_WORKER_AVG_MEMORY }}
+{%- endif %}
+{% if RUN_CMS and CMS_AUTOSCALING %}
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cms-hpa
+  labels:
+    app.kubernetes.io/name: cms-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cms
+  minReplicas: {{ CMS_MIN_REPLICAS }}
+  maxReplicas: {{ CMS_MAX_REPLICAS }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ CMS_AVG_CPU }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: {{ CMS_AVG_MEMORY }}
+{%- endif %}
+{%- if RUN_CMS and CMS_WORKER_AUTOSCALING %}
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cms-worker-hpa
+  labels:
+    app.kubernetes.io/name: cms-worker-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cms-worker
+  minReplicas: {{ CMS_WORKER_MIN_REPLICAS }}
+  maxReplicas: {{ CMS_WORKER_MAX_REPLICAS }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ CMS_WORKER_AVG_CPU }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: {{ CMS_WORKER_AVG_MEMORY }}
+{%- endif %}
