@@ -18,6 +18,8 @@ Every user-facing change should have an entry in this changelog. Please respect 
 
 ## Unreleased
 
+- [Bugfix] Skip waiting for MongoDB if it is served using SRV records. (by @gabor-boros)
+
 ## v14.0.1 (2022-06-13)
 
 - [Bugfix] Fix missing tables on migration from maple ([#689](https://github.com/overhangio/tutor/issues/689)). (by @ibrmora)
