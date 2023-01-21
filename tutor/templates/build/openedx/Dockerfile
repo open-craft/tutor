@@ -259,6 +259,7 @@ FROM production as final
 
 # Run server
 CMD uwsgi \
+    --master \
     --static-map /static=/openedx/staticfiles/ \
     --static-map /media=/openedx/media/ \
     --http 0.0.0.0:8000 \
