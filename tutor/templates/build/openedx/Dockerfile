@@ -266,7 +266,7 @@ CMD uwsgi \
     --single-interpreter \
     --enable-threads \
     --processes=${UWSGI_WORKERS:-2} \
-    --buffer-size=9728 \
+    --buffer-size=12288 \
     --wsgi-file $SERVICE_VARIANT/wsgi.py
 
 {{ patch("openedx-dockerfile-final") }}
