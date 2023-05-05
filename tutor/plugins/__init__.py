@@ -68,7 +68,7 @@ def load_all(names: t.Iterable[str]) -> None:
     Plugins are loaded in alphabetical order. We ignore plugins which failed to load.
     After all plugins have been loaded, the PLUGINS_LOADED action is triggered.
     """
-    names = sorted(set(names))
+    # names = sorted(set(names))
     for name in names:
         try:
             load(name)
