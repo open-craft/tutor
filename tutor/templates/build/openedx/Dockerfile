@@ -265,6 +265,7 @@ CMD uwsgi \
     --thunder-lock \
     --single-interpreter \
     --enable-threads \
+    --lazy-apps \
     --processes=${UWSGI_WORKERS:-2} \
     --buffer-size=8192 \
     --wsgi-file $SERVICE_VARIANT/wsgi.py
