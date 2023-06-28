@@ -155,7 +155,6 @@ def images_command() -> None:
     "docker_output",
     # Export image to docker. This is necessary to make the image available to docker-compose.
     # The `--load` option is a shorthand for `--output=type=docker`.
-    default="type=docker",
     help="Same as `docker build --output=...`. This option will only be used when BuildKit is enabled.",
 )
 @click.option(
