@@ -214,6 +214,7 @@ def build(
         command_args.append(f"--output={docker_output}")
     if docker_args:
         command_args += docker_args
+    command_args.append("--provenance=false")
     # Build context mounts
     build_contexts = get_image_build_contexts(config)
 
