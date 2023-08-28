@@ -247,6 +247,7 @@ MongoDB
 - ``MONGODB_PASSWORD`` (default: ``""``)
 - ``MONGODB_PORT`` (default: ``27017``)
 - ``MONGODB_USERNAME`` (default: ``""``)
+- ``MONGODB_CONNECT`` (default: ``false``)
 - ``MONGODB_USE_SSL`` (default: ``false``)
 - ``MONGODB_REPLICA_SET`` (default: ``""``)
 - ``MONGODB_AUTH_MECHANISM`` (default: ``""``)
