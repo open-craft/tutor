@@ -46,8 +46,16 @@ def mounts_list(context: Context) -> None:
     Entries will be fetched from the `MOUNTS` project setting.
     """
     config = tutor_config.load(context.root)
+    fmt.echo("*****************************************")
+    fmt.echo("*****************************************")
+    fmt.echo(yaml.dump(config))
+    fmt.echo("*****************************************")
+    fmt.echo("*****************************************")
     mounts = []
     for mount_name in bindmount.get_mounts(config):
+        fmt.echo(mount_name)
+        fmt.echo("*****************************************")
+        fmt.echo("*****************************************")
         build_mounts = [
             {"image": image_name, "context": stage_name}
             for image_name, stage_name in hooks.Filters.IMAGES_BUILD_MOUNTS.iterate(
