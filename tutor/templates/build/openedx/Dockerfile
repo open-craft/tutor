@@ -115,23 +115,23 @@ RUN --mount=type=cache,target=/openedx/.cache/pip,sharing=shared \
 {% endfor %}
 
 ###### Install nodejs with nodeenv in /openedx/nodeenv
-FROM python as nodejs-requirements
-ENV PATH /openedx/nodeenv/bin:/openedx/venv/bin:${PATH}
+# FROM python as nodejs-requirements
+# ENV PATH /openedx/nodeenv/bin:/openedx/venv/bin:${PATH}
 
-# Install nodeenv with the version provided by edx-platform
-# https://github.com/openedx/edx-platform/blob/master/requirements/edx/base.txt
-# https://github.com/pyenv/pyenv/releases
-RUN pip install nodeenv==1.8.0
-RUN nodeenv /openedx/nodeenv --node=16.14.0 --prebuilt
+# # Install nodeenv with the version provided by edx-platform
+# # https://github.com/openedx/edx-platform/blob/master/requirements/edx/base.txt
+# # https://github.com/pyenv/pyenv/releases
+# RUN pip install nodeenv==1.8.0
+# RUN nodeenv /openedx/nodeenv --node=16.14.0 --prebuilt
 
-# Install nodejs requirements
-ARG NPM_REGISTRY={{ NPM_REGISTRY }}
-WORKDIR /openedx/edx-platform
-RUN --mount=type=bind,from=edx-platform,source=/package.json,target=/openedx/edx-platform/package.json \
-    --mount=type=bind,from=edx-platform,source=/package-lock.json,target=/openedx/edx-platform/package-lock.json \
-    --mount=type=bind,from=edx-platform,source=/scripts/copy-node-modules.sh,target=/openedx/edx-platform/scripts/copy-node-modules.sh \
-    --mount=type=cache,target=/root/.npm,sharing=shared \
-    npm clean-install --no-audit --registry=$NPM_REGISTRY
+# # Install nodejs requirements
+# ARG NPM_REGISTRY={{ NPM_REGISTRY }}
+# WORKDIR /openedx/edx-platform
+# RUN --mount=type=bind,from=edx-platform,source=/package.json,target=/openedx/edx-platform/package.json \
+#     --mount=type=bind,from=edx-platform,source=/package-lock.json,target=/openedx/edx-platform/package-lock.json \
+#     --mount=type=bind,from=edx-platform,source=/scripts/copy-node-modules.sh,target=/openedx/edx-platform/scripts/copy-node-modules.sh \
+#     --mount=type=cache,target=/root/.npm,sharing=shared \
+#     npm clean-install --no-audit --registry=$NPM_REGISTRY
 
 ###### Production image with system and python requirements
 FROM minimal as production
@@ -155,11 +155,11 @@ COPY --chown=app:app --from=edx-platform / /openedx/edx-platform
 COPY --chown=app:app --from=python /opt/pyenv /opt/pyenv
 COPY --chown=app:app --from=python-requirements /openedx/venv /openedx/venv
 COPY --chown=app:app --from=python-requirements /mnt /mnt
-COPY --chown=app:app --from=nodejs-requirements /openedx/nodeenv /openedx/nodeenv
-COPY --chown=app:app --from=nodejs-requirements /openedx/edx-platform/node_modules /openedx/node_modules
+# COPY --chown=app:app --from=nodejs-requirements /openedx/nodeenv /openedx/nodeenv
+# COPY --chown=app:app --from=nodejs-requirements /openedx/edx-platform/node_modules /openedx/node_modules
 
 # Symlink node_modules such that we can bind-mount the edx-platform repository
-RUN ln -s /openedx/node_modules /openedx/edx-platform/node_modules
+# RUN ln -s /openedx/node_modules /openedx/edx-platform/node_modules
 
 ENV PATH /openedx/venv/bin:./node_modules/.bin:/openedx/nodeenv/bin:${PATH}
 ENV VIRTUAL_ENV /openedx/venv/
@@ -211,15 +211,15 @@ ENV NO_PREREQ_INSTALL 1
 # We need to rely on a separate openedx-assets command to accelerate asset processing.
 # For instance, we don't want to run all steps of asset collection every time the theme
 # is modified.
-RUN openedx-assets xmodule \
-    && openedx-assets npm \
-    && openedx-assets webpack --env=prod \
-    && openedx-assets common
-COPY --chown=app:app ./themes/ /openedx/themes/
-RUN openedx-assets themes \
-    && openedx-assets collect --settings=tutor.assets \
-    # De-duplicate static assets with symlinks
-    && rdfind -makesymlinks true -followsymlinks true /openedx/staticfiles/
+# RUN openedx-assets xmodule \
+#     && openedx-assets npm \
+#     && openedx-assets webpack --env=prod \
+#     && openedx-assets common
+# COPY --chown=app:app ./themes/ /openedx/themes/
+# RUN openedx-assets themes \
+#     && openedx-assets collect --settings=tutor.assets \
+#     # De-duplicate static assets with symlinks
+#     && rdfind -makesymlinks true -followsymlinks true /openedx/staticfiles/
 
 # Create a data directory, which might be used (or not)
 RUN mkdir /openedx/data
@@ -270,9 +270,9 @@ ENV PYTHONBREAKPOINT=ipdb.set_trace
 # Recompile static assets: in development mode all static assets are stored in edx-platform,
 # and the location of these files is stored in webpack-stats.json. If we don't recompile
 # static assets, then production assets will be served instead.
-RUN rm -r /openedx/staticfiles && \
-    mkdir /openedx/staticfiles && \
-    openedx-assets webpack --env=dev
+# RUN rm -r /openedx/staticfiles && \
+#     mkdir /openedx/staticfiles && \
+#     openedx-assets webpack --env=dev
 
 {{ patch("openedx-dev-dockerfile-post-python-requirements") }}
 
