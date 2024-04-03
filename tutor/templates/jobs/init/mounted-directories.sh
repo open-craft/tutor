@@ -34,10 +34,10 @@ set -x # Echo out executed lines
 pip install -e .
 
 # Regenerate node_modules
-npm clean-install
+#npm clean-install
 
 # Regenerate static assets.
-openedx-assets build --env=dev
+#openedx-assets build --env=dev
 
 set -x
 echo "Done setting up bind-mounted edx-platform."
