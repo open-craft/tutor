@@ -16,6 +16,9 @@ x-openedx-job-service:
     - ../apps/openedx/config:/openedx/config:ro
     # theme files
     - ../build/openedx/themes:/openedx/themes
+    {%- for mount in iter_mounts(MOUNTS, "openedx") %}
+    - {{ mount }}
+    {%- endfor %}
 
 services:
 

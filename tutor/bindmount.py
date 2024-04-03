@@ -22,12 +22,12 @@ def iter_mounts(user_mounts: list[str], *names: str) -> t.Iterable[str]:
     but that's OK because their result is cached.
     """
     for user_mount in user_mounts:
-        for service, host_path, container_path in parse_mount(user_mount):
+        for service, host_path, container_path, options in parse_mount(user_mount):
             if service in names:
-                yield f"{host_path}:{container_path}"
+                yield f"{host_path}:{container_path}{options}"
 
 
-def parse_mount(value: str) -> list[tuple[str, str, str]]:
+def parse_mount(value: str) -> list[tuple[str, str, str, str]]:
     """
     Parser for mount arguments of the form
     "service1[,service2,...]:/host/path:/container/path" (explicit) or "/host/path".
@@ -39,38 +39,49 @@ def parse_mount(value: str) -> list[tuple[str, str, str]]:
 
 
 @lru_cache(maxsize=None)
-def parse_explicit_mount(value: str) -> list[tuple[str, str, str]]:
+def parse_explicit_mount(value: str) -> list[tuple[str, str, str, str]]:
     """
-    Argument is of the form "containers:/host/path:/container/path".
+    Argument is of the form "containers:/host/path:/container/path"
+                         or "containers:/host/path:/container/path:z"
     """
     # Note that this syntax does not allow us to include colon ':' characters in paths
     match = re.match(
-        r"(?P<services>[a-zA-Z0-9-_, ]+):(?P<host_path>[^:]+):(?P<container_path>[^:]+)",
+        r"(?P<services>[a-zA-Z0-9-_, ]+):(?P<host_path>[^:]+):(?P<container_path>[^:]+)(?P<options>:.+)?",
         value,
     )
     if not match:
         return []
 
-    mounts: list[tuple[str, str, str]] = []
+    mounts: list[tuple[str, str, str, str]] = []
     services: list[str] = [service.strip() for service in match["services"].split(",")]
     host_path = os.path.abspath(os.path.expanduser(match["host_path"]))
     host_path = host_path.replace(os.path.sep, "/")
     container_path = match["container_path"]
+    options = match["options"] or ""
     for service in services:
         if service:
-            mounts.append((service, host_path, container_path))
+            mounts.append((service, host_path, container_path, options))
     return mounts
 
 
 @lru_cache(maxsize=None)
-def parse_implicit_mount(value: str) -> list[tuple[str, str, str]]:
+def parse_implicit_mount(value: str) -> list[tuple[str, str, str, str]]:
     """
     Argument is of the form "/path/to/host/directory"
     """
-    mounts: list[tuple[str, str, str]] = []
-    host_path = os.path.abspath(os.path.expanduser(value))
+    match = re.match(
+            r"(?P<host_path>[^:]+)(?P<options>:.+)?",
+        value,
+    )
+    if not match:
+        return []
+
+    mounts: list[tuple[str, str, str, str]] = []
+    host_path = match["host_path"]
+    host_path = os.path.abspath(os.path.expanduser(host_path))
+    options = match["options"] or ""
     for service, container_path in hooks.Filters.COMPOSE_MOUNTS.iterate(
         os.path.basename(host_path)
     ):
-        mounts.append((service, host_path, container_path))
+        mounts.append((service, host_path, container_path, options))
     return mounts

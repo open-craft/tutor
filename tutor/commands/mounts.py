@@ -57,9 +57,9 @@ def mounts_list(context: Context) -> None:
         compose_mounts = [
             {
                 "service": service,
-                "container_path": container_path,
+                "container_path": f"{container_path}{options}",
             }
-            for service, _host_path, container_path in bindmount.parse_mount(mount_name)
+            for service, _host_path, container_path, options in bindmount.parse_mount(mount_name)
         ]
         mounts.append(
             {

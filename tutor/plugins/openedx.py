@@ -122,7 +122,7 @@ def iter_mounted_directories(mounts: list[str], image_name: str) -> t.Iterator[s
     """
     mounted_dirnames: set[str] = set()
     for mount in mounts:
-        for _service, host_path, _container_path in bindmount.parse_mount(mount):
+        for _service, host_path, _container_path, _options in bindmount.parse_mount(mount):
             dirname = os.path.basename(host_path)
             if is_directory_mounted(image_name, dirname):
                 mounted_dirnames.add(dirname)
