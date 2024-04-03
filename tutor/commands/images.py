@@ -262,7 +262,8 @@ def get_image_build_contexts(config: Config) -> dict[str, list[tuple[str, str]]]
         ):
             if image_name not in build_contexts:
                 build_contexts[image_name] = []
-            build_contexts[image_name].append((user_mount, stage_name))
+            for _service, host_path, _container_path in bindmount.parse_mount(user_mount):
+                build_contexts[image_name].append((host_path, stage_name))
     return build_contexts
 
 

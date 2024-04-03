@@ -8,6 +8,9 @@ x-openedx-service:
   volumes:
     # theme files
     - ../build/openedx/themes:/openedx/themes
+    {%- for mount in iter_mounts(MOUNTS, "openedx") %}
+    - {{ mount }}
+    {%- endfor %}
 
 services:
   permissions:
