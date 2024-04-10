@@ -140,7 +140,7 @@ RUN --mount=type=bind,from=edx-platform,source=/package.json,target=/openedx/edx
     --mount=type=bind,from=edx-platform,source=/package-lock.json,target=/openedx/edx-platform/package-lock.json \
     --mount=type=bind,from=edx-platform,source=/scripts/copy-node-modules.sh,target=/openedx/edx-platform/scripts/copy-node-modules.sh \
     --mount=type=cache,target=/root/.npm,sharing=shared \
-    npm clean-install --no-audit --registry=$NPM_REGISTRY
+    npm cache clear --force && npm clean-install --no-shrinkwrap --update-binary --no-audit --registry=$NPM_REGISTRY
 
 ###### Production image with system and python requirements
 FROM minimal as production
@@ -178,7 +178,8 @@ WORKDIR /openedx/edx-platform
 {# Install auto-mounted directories as Python packages. #}
 {% for name in iter_mounted_directories(MOUNTS, "openedx") %}
 COPY --from=mnt-{{ name }} --chown=app:app / /mnt/{{ name }}
-RUN pip install -e "/mnt/{{ name }}"
+RUN --mount=type=cache,target=/openedx/.cache/pip,sharing=shared \
+    pip install -e "/mnt/{{ name }}"
 {% endfor %}
 
 # We install edx-platform here because it creates an egg-info folder in the current
