@@ -28,7 +28,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: {{ ELASTICSEARCH_STORAGE_SIZE }}
 {% endif %}
 {% if RUN_MONGODB %}
 ---
