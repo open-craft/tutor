@@ -235,6 +235,11 @@ Elasticsearch
 - ``ELASTICSEARCH_HOST`` (default: ``"elasticsearch"``)
 - ``ELASTICSEARCH_PORT`` (default: ``9200``)
 - ``ELASTICSEARCH_HEAP_SIZE`` (default: ``"1g"``)
+- ``ELASTICSEARCH_STORAGE_SIZE`` (default: ``"2Gi"``)
+
+.. note::
+    Tutor does not support changing the Elasticsearch storage size after it has been deployed. You'll have to manually resize the `pvc/elasticsearch` using `kubectl`. Also note that it's not possible to reduce a `PVC` size, it must be deleted and recreated in such cases.
+
 
 MongoDB
 *******
