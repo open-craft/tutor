@@ -17,6 +17,6 @@ fi
 # this will not populate the index (potentially slow) nor replace any existing
 # index (resulting in broken features until it is complete). If either of those
 # are necessary, it will print instructions on what command to run to do so.
-./manage.py cms reindex_studio --experimental --init
-# Create the courseware content index
-./manage.py cms reindex_course --active
+# ./manage.py cms reindex_studio --experimental --init
+# # Create the courseware content index
+# ./manage.py cms reindex_course --active
