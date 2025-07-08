@@ -225,6 +225,7 @@ ENV PATH=/openedx/bin:${PATH}
 # Build & collect production assets. By default, only assets from the default theme
 # will be processed. This makes the docker image lighter and faster to build.
 RUN npm run postinstall  # Postinstall artifacts are stuck in nodejs-requirements layer. Create them here too.
+RUN pip install libsass==0.10.0
 RUN npm run compile-sass -- --skip-themes
 RUN npm run webpack
 
