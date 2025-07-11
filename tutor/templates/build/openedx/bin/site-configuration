@@ -1,8 +1,5 @@
 #! /usr/bin/env python3
 import argparse
-import lms.startup
-
-lms.startup.run()
 
 from django.conf import settings
 from django.contrib.sites.models import Site
