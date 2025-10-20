@@ -19,4 +19,5 @@ fi
 # are necessary, it will print instructions on what command to run to do so.
 ./manage.py cms reindex_studio --experimental --init
 # Create the courseware content index
-./manage.py cms reindex_course --active
+# Don't do this during init, because for large deployments this can take hours
+#./manage.py cms reindex_course --active
